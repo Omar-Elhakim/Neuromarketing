@@ -180,6 +180,7 @@ def preProcess(subData):
     b, a = sc.signal.butter(4, Wn=bandpassWindow, btype='bandpass', fs=origSamplingRate)
     s = [sc.signal.lfilter(b, a, trial) for trial in subData]
     s = [downSample(trial)  for trial in s]
+    s = [sc.stats.zscore(trial, axis=1) for trial in s]
     s = [segmentTrial(trial)  for trial in s]
     return s
 
@@ -219,6 +220,13 @@ downSampledSignal = [downSample(trial)  for trial in filteredSignal]
 
 # %%
 fig = px.line(downSampledSignal[0][0][:1001])
+fig.show(renderer=rndr)
+
+# %%
+normalizedSignal = [sc.stats.zscore(trial, axis=1) for trial in downSampledSignal]
+
+# %%
+fig = px.line(normalizedSignal[0][0][:800])
 fig.show(renderer=rndr)
 
 # %%
