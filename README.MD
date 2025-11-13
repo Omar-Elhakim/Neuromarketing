@@ -1,4 +1,4 @@
-# NeuroMarketing Repository
+# Neuromarketing Repository
 
 ## Getting Started
 
@@ -6,7 +6,7 @@ To get started with this repository, follow the steps below:
 
 1. **Clone the Repository**
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/Omar-Elhakim/Neuromarketing
     ```
 
 2. **Install Dependencies**
