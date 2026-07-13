@@ -73,10 +73,19 @@ subject-dependent → subject-independent drop on the 4-class task (85.02% →
 52.10%) is the honest headline: cross-subject EEG emotion recognition is still
 hard.
 
-> **Caveat:** `experiments/attention_graph/dep_4class.ipynb` reports 100.00%
-> accuracy. That is almost certainly leakage — overlapping windows from the same
-> trial landing in both train and test — not a real result. It is kept for the
-> record but should not be cited.
+> **Read the subject-dependent numbers with care.** Those experiments split
+> segments randomly (`train_test_split`), so windows from the *same trial* land
+> in both train and test. Because EEG is strongly autocorrelated within a trial,
+> a model can score well by recognising the trial rather than the emotion. This
+> split is common in the SEED literature, but it flatters the results — a
+> trial-level split (`GroupKFold` grouped by trial) is the honest version.
+>
+> The clearest symptom is `experiments/attention_graph/dep_4class.ipynb`, which
+> reports **100.00%**. That is leakage, not a result, and should not be cited.
+>
+> The subject-independent numbers do **not** have this problem: a whole subject
+> is held out, so nothing about them can leak into training. They are the
+> trustworthy half of the table.
 
 ## Dataset
 
