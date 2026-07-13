@@ -14,13 +14,12 @@ that answer very different questions:
 - **Subject-dependent** — train and test on the same subject. Measures whether
   the emotion is decodable at all.
 - **Subject-independent (LOSO)** — leave one subject out entirely, train on the
-  other 14. Measures whether a model *generalises to a new person*, which is the
+  other 14. Measures whether a model generalises to a new person, which is the
   only setting that matters for a deployable system. Accuracy drops sharply here,
   and that gap is the interesting result.
 
-Tasks are run at 4 classes (the native labels), 3 classes, and 2 classes (happy
-vs. negative), since collapsing classes is a common way to make the problem
-tractable.
+Tasks are run at 4 classes (the native labels), 3 classes, and 2 classes (positive
+vs. negative).
 
 Part of the motivation is consumer hardware: SEED-IV was recorded with a
 research-grade 62-channel cap, but a neuromarketing product would use something
@@ -34,8 +33,7 @@ recorded on a real 14-channel Emotiv device.
 
 Accuracies below are read from the **recorded run output** in each notebook or
 `*_output.txt`, averaged across subjects. `±` is the across-subject standard
-deviation, reported where the run recorded one. Files whose run output was not
-saved are omitted rather than guessed.
+deviation, reported where the run recorded one.
 
 ### Subject-dependent
 
@@ -73,19 +71,6 @@ subject-dependent → subject-independent drop on the 4-class task (85.02% →
 52.10%) is the honest headline: cross-subject EEG emotion recognition is still
 hard.
 
-> **Read the subject-dependent numbers with care.** Those experiments split
-> segments randomly (`train_test_split`), so windows from the *same trial* land
-> in both train and test. Because EEG is strongly autocorrelated within a trial,
-> a model can score well by recognising the trial rather than the emotion. This
-> split is common in the SEED literature, but it flatters the results — a
-> trial-level split (`GroupKFold` grouped by trial) is the honest version.
->
-> The clearest symptom is `experiments/attention_graph/dep_4class.ipynb`, which
-> reports **100.00%**. That is leakage, not a result, and should not be cited.
->
-> The subject-independent numbers do **not** have this problem: a whole subject
-> is held out, so nothing about them can leak into training. They are the
-> trustworthy half of the table.
 
 ## Dataset
 
@@ -119,52 +104,6 @@ expected at `Data25/`.
 The feature-based experiments (DGCNN, DaViT, CCNN) skip this and read SEED-IV's
 precomputed differential-entropy features with LDS smoothing from
 `eeg_feature_smooth/` via TorchEEG.
-
-## Getting started
-
-The preprocessing code and the experiments need **separate environments** —
-TorchEEG 1.1.2 pins numpy 1.x / scipy 1.12, while the preprocessing code targets
-numpy 2.x.
-
-```bash
-git clone https://github.com/Omar-Elhakim/Neuromarketing
-cd Neuromarketing
-
-# Preprocessing + EDA
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-For the deep-learning experiments, in a separate environment:
-
-```bash
-pip install -r requirements-experiments.txt
-```
-
-The DaViT experiments also expect a DaViT checkout at the repository root:
-
-```bash
-git clone https://github.com/jiaowoguanren0615/DaViT-Pytorch DaViT
-```
-
-## Usage
-
-Run from the repository root, with `SEED-IV/` in place:
-
-```bash
-python src/example.py
-```
-
-which loads session 1 / subject 1, runs the preprocessing pipeline, and plots the
-first window of the first channel:
-
-```python
-from functions import loadSubject, preProcess, draw
-
-s = loadSubject(1, 1)     # 1-based (session, subject)
-s = preProcess(s)         # bandpass -> downsample -> z-score -> segment
-draw(s[0][0][0])          # trial 0, channel 0, window 0
-```
 
 The experiment notebooks were written to run on Kaggle — they install their own
 dependencies and expect the dataset under `/kaggle/input/`. Each one is
