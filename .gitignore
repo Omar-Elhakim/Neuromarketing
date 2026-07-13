@@ -1,4 +1,20 @@
+# Datasets — downloaded separately, see README
 /SEED*
+/Data25
 /Plots
-*.ipynb
+
+# TorchEEG preprocessed-dataset cache
+tmp_out/
+.torcheeg/
+
+# Local scratch notebooks
+/d.ipynb
+/kaggle.ipynb
+/work.ipynb
+
+# Python
 __pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
